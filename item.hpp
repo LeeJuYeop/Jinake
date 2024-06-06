@@ -1,11 +1,9 @@
 #pragma once
 #include <ncurses.h>
 
-namespace snake{
+namespace snake {
 
-    // Item은 기본적으로 row, col, icon을 가지고, row, col getting 과 icon setting을 지원
-    class Item
-    {
+    class Item {
     public:
         Item(int y = 0, int x = 0);
 
@@ -20,27 +18,32 @@ namespace snake{
         char icon;
     };
 
-    // Item 상속 받아서 icon만 'A'로 바꿈
-    class Apple : public Item
-    {
+    // Item 상속(몸길이 증가)
+    class Apple : public Item {
     public:
         Apple(int y = 0, int x = 0);
     };
 
-    // Item 상속 받아서 icon만 'B'로 바꿈
-    class Bomb : public Item
-    {
+    // Item 상속(몸길이 감소)
+    class Bomb : public Item {
     public:
         Bomb(int y = 0, int x = 0);
     };
 
-    class Warp : public Item
-    {
+    // Item 상속(속도 변화)
+    class Speed : public Item {
+    public:
+        Speed(int y = 0, int x = 0);
+    };
+
+    // Item 상속(게이트 기능)
+    class Warp : public Item {
     public:
         Warp(int y = 0, int x = 0, char c = ' ');
         char getExitIcon();
         
     private:
+        // 'W' 변환 전 기존 char
         char exitIcon;
     };
 }
