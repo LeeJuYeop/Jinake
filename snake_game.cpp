@@ -15,8 +15,10 @@ namespace snake{
     // 소멸자 호출 시 동적으로 할당했던 변수 delete
     SnakeGame::~SnakeGame()
     {
+        delete tmp_next;
         delete apple;
         delete bomb;
+        delete speed;
         delete warp1;
         delete warp2;
     }
@@ -24,7 +26,7 @@ namespace snake{
     // 게임 시작할 시(= 생성자 호출 될 시) 진행하는 로직
     void SnakeGame::initialize(int stageNum)
     {   
-        srand(time(NULL));
+        srand(time(nullptr));
 
         appleScore = 0;
         bombScore = 0;
@@ -47,8 +49,10 @@ namespace snake{
         board.add(1, 1, '#');
 
         // 사과랑 폭탄 만든다
+        tmp_next = nullptr;
         createApple();
         createBomb();
+        createSpeed();
         createWarp();
     }
 
@@ -78,6 +82,14 @@ namespace snake{
 
         // 게임 창의 메모리 상으로 사과 B 추가
         board.add(y, x, 'B');
+    }
+
+    // 스피드 만드는 함수
+    void SnakeGame::createSpeed() {
+        int y, x;
+        board.getItemPos(y, x);
+        speed = new Speed(y, x);
+        board.add(y, x, 'S');
     }
 
     // 워프 만드는 함수
@@ -129,12 +141,12 @@ namespace snake{
                 board.setTimeout(300);
                 break;
             
-            //n 버튼으로 다음 스테이지로 넘어가기
+            // 임시로 만든 기능. n 누르면 다음 스테이지로 넘어감
             case 'n':
                 // 현재 게임의 stage 번호를 num에 저장
                 int num = getStageNum();
 
-                // 단계 넘어가기
+                // 다음 스테이지로 넘어가야하므로 ++num 한 것
                 initialize(++num);
                 
                 break;
@@ -147,7 +159,7 @@ namespace snake{
         // 스테이지가 4라는 것은 스테이지 끝이라는 뜻
         if (getStageNum() == 4)
         {   
-            // 게임 오버
+            // 게임 오버로 하자
             game_over = true;
         }
         // next는 snake가 다음 어디로 가야할지 그 위치의 값을 가진 SnakePiece이다
@@ -169,21 +181,26 @@ namespace snake{
             // next 라는 SnakePiece를 가지고 뱀을 조종
             handleNext(next);
         
-        if((tmp_next!=NULL)&&(board.getCharAt(tmp_next->getY(), tmp_next->getX()) !='#')&& (board.getCharAt(tmp_next->getY(), tmp_next->getX()) !='%'))
+        if((tmp_next!=nullptr)&&(board.getCharAt(tmp_next->getY(), tmp_next->getX()) !='#')&& (board.getCharAt(tmp_next->getY(), tmp_next->getX()) !='%'))
             endWarp();
 
-        // 만약 사과나 폭탄이 NULL 상태라면 생성
-        if (apple == NULL)
+        // 만약 사과나 폭탄이 nullptr 상태라면 생성해야 한다
+        if (apple == nullptr)
         {
             createApple();
         }
 
-        if (bomb == NULL)
+        if (bomb == nullptr)
         {
             createBomb();
         }
 
-        if ((warp1 == NULL) && (warp2 == NULL))
+        if (speed == nullptr)
+        {
+            createSpeed();
+        }
+
+        if ((warp1 == nullptr) && (warp2 == nullptr))
         {
             createWarp();
         }
@@ -201,7 +218,7 @@ namespace snake{
             // 현재 게임의 stage 번호를 num에 저장
             int num = getStageNum();
 
-            // 다음 스테이지로 넘어가야하므로 ++num
+            // 다음 스테이지로 넘어가야하므로 ++num 한 것
             initialize(++num);
             
         }
@@ -280,6 +297,16 @@ namespace snake{
             board.add(snake.head().getY(), snake.head().getX(), '%');
         }
 
+        else if (board.getCharAt(nextRow, nextCol) == 'S') {
+            eatSpeed();
+            
+            int curSpeed = board.getSpeed();
+            int sArr[10] = {75, 100, 125, 150, 175, 200, 225, 250, 275, 300};
+            int newSpeed = sArr[rand() % 10];
+            while (curSpeed == newSpeed) { newSpeed = sArr[rand() % 10]; }
+            board.setSpeed(newSpeed);
+        }
+
         // Wall(= '1')을 만났을 때, 뱀 몸통(=자기 자신)을 만났을 때
         else
         {
@@ -293,9 +320,9 @@ namespace snake{
         // 우선 보드에 기존의 사과 위치에다가 ' ' add한다
         board.add(apple->getY(), apple->getX(), ' ');
 
-        // 동적할당 했었던 apple 없애고 apple을 NULL로 하자
+        // 동적할당 했었던 apple 없애고 apple을 nullptr로 하자
         delete apple;
-        apple = NULL;
+        apple = nullptr;
 
     }
 
@@ -305,9 +332,15 @@ namespace snake{
         // 우선 보드에 기존의 폭탄 위치에다가 ' ' add한다
         board.add(bomb->getY(), bomb->getX(), ' ');
 
-        // 동적할당 했었던 bomb 없애고 bomb을 NULL로 하자
+        // 동적할당 했었던 bomb 없애고 bomb을 nullptr로 하자
         delete bomb;
-        bomb = NULL;
+        bomb = nullptr;
+    }
+
+    void SnakeGame::eatSpeed() {
+        board.add(speed->getY(), speed->getX(), ' ');
+        delete speed;
+        speed = nullptr;
     }
 
     // stage 번호에 따라서 게임 창을 초기화하는 함수
@@ -336,24 +369,24 @@ namespace snake{
         board.refresh();
     }
 
-    //일정 시간 지나면 아이템 업데이트 기능)
+    // ==혜인님 코드 (일정 시간 지나면 아이템 업데이트 기능)==
     // item update per 7seconds
     void SnakeGame::ItemUpdate()
     {
-        if (apple != NULL) {
+        if (apple != nullptr) {
             // board.add(apple->getY(), apple->getX(), ' ');
             // delete apple;
-            // apple = NULL;
+            // apple = nullptr;
 
             // 기존 코드가 eatApple()과 똑같아서 대체함
             eatApple();
             createApple();
         }
 
-        if (bomb != NULL) {
+        if (bomb != nullptr) {
             // board.add(bomb->getY(), bomb->getX(), ' ');
             // delete bomb;
-            // bomb = NULL;
+            // bomb = nullptr;
 
             // 기존 코드가 eatBomb()과 똑같아서 대체함
             eatBomb();
@@ -381,71 +414,19 @@ namespace snake{
     {
         board.add(warp1->getY(), warp1->getX(), warp1->getExitIcon());
         delete warp1;
-        warp1=NULL;
+        warp1=nullptr;
 
         board.add(warp2->getY(), warp2->getX(), warp2->getExitIcon());
         delete warp2;
-        warp2=NULL;
+        warp2=nullptr;
 
         warpScore++;
-        tmp_next=NULL;
         delete tmp_next;
+        tmp_next=nullptr;
     }
     
     void SnakeGame::checkWarp(SnakePiece& next, Warp *warp)
     {
-        /*
-        int dy[4]={}, dx[4]={};
-        Direction key[5];
-
-        if (snake.getDirection() == up) {
-            // UP, RIGHT, LEFT, DOWN
-            dx[0] = 0; dy[0] = -1; key[0] = up;
-            dx[1] = 1; dy[1] = 0; key[1] = right;
-            dx[2] = -1; dy[2] = 0; key[2] = left;
-            dx[3] = 0; dy[3] = 1; key[3] = down;
-        } 
-        else if (snake.getDirection() == down) {
-            // DOWN, LEFT, RIGHT, UP
-            dx[0] = 0; dy[0] = 1; key[0] = down;
-            dx[1] = -1; dy[1] = 0; key[1] = left;
-            dx[2] = 1; dy[2] = 0; key[2] = right;
-            dx[3] = 0; dy[3] = -1; key[3] = up;
-        } 
-        else if (snake.getDirection() == right) {
-            // RIGHT, DOWN, UP, LEFT
-            dx[0] = 1; dy[0] = 0; key[0] = right;
-            dx[1] = 0; dy[1] = 1; key[1] = down;
-            dx[2] = 0; dy[2] = -1; key[2] = up;
-            dx[3] = -1; dy[3] = 0; key[3] = left;
-        } 
-        else if (snake.getDirection() == left) {
-            // LEFT, UP, DOWN, RIGHT
-            dx[0] = -1; dy[0] = 0; key[0] = left;
-            dx[1] = 0; dy[1] = -1; key[1] = up;
-            dx[2] = 0; dy[2] = 1; key[2] = down;
-            dx[3] = 1; dy[3] = 0; key[3] = right;
-        }
-
-        for(int i=0; i<4; i++)
-        {
-            int tmp_y= warp->getY()+dy[i];
-            int tmp_x= warp->getX()+dx[i];
-            //out of map
-            if((tmp_y<0)|| (tmp_x<0)|| (tmp_y>20) ||(tmp_x>38))
-                continue;
-            //if(board.stage[board.stageNum][tmp_y][tmp_x]=='$')
-            if(board.getCharAt(tmp_y, tmp_x)=='+' || board.getCharAt(tmp_y, tmp_x)=='#')
-                continue;
-
-            //if find empty
-            snake.setD_warp(key[i]);
-            next = SnakePiece(tmp_y, tmp_x);
-            tmp_next= new SnakePiece(next);
-            break;
-        }
-        */
-
         int dDir[4][2] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
         Direction dirArr[4] = {up, right, down, left};
         Direction curDir = snake.getDirection();
@@ -475,5 +456,12 @@ namespace snake{
             tmp_next= new SnakePiece(next);
             break;
         }
+    }
+
+    void deleteAll(Apple* a, Bomb*b, Warp* w1, Warp* w2) {
+        delete a;
+        delete b;
+        delete w1;
+        delete w2;
     }
 }
