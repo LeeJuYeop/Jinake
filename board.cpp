@@ -187,7 +187,7 @@ namespace snake{
         mvwprintw(scoreBoard, 3, 3, "Size : %d ", size);
         mvwprintw(scoreBoard, 4, 3, "Apple : %d ", appleS);
         mvwprintw(scoreBoard, 5, 3, "Bomb : %d ", bombS);
-        mvwprintw(scoreBoard, 6, 3, "Wrap : %d ", warpS);
+        mvwprintw(scoreBoard, 6, 3, "Warp : %d ", warpS);
 
         mvwprintw(scoreBoard, 8, 3, "Stage : %d", stageNum+1);
 
@@ -198,8 +198,8 @@ namespace snake{
         else{mvwprintw(missionBoard, 4, 3, "Apple : %d/7 (  )", appleS);}
         if(bombC){mvwprintw(missionBoard, 5, 3, "Bomb : 5/5 ( v )");}
         else{mvwprintw(missionBoard, 5, 3, "Bomb : %d/5 (  )", bombS);}
-        if(warpC){mvwprintw(missionBoard, 6, 3, "Wrap : 3/3 ( v )");}
-        else{mvwprintw(missionBoard, 6, 3, "Wrap : %d/3 (  )", warpS);}
+        if(warpC){mvwprintw(missionBoard, 6, 3, "Warp : 3/3 ( v )");}
+        else{mvwprintw(missionBoard, 6, 3, "Warp : %d/3 (  )", warpS);}
     }
 
 
