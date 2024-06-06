@@ -129,12 +129,12 @@ namespace snake{
                 board.setTimeout(300);
                 break;
             
-            // 임시로 만든 기능. n 누르면 다음 스테이지로 넘어감
+            //n 버튼으로 다음 스테이지로 넘어가기
             case 'n':
                 // 현재 게임의 stage 번호를 num에 저장
                 int num = getStageNum();
 
-                // 다음 스테이지로 넘어가야하므로 ++num 한 것
+                // 단계 넘어가기
                 initialize(++num);
                 
                 break;
@@ -147,7 +147,7 @@ namespace snake{
         // 스테이지가 4라는 것은 스테이지 끝이라는 뜻
         if (getStageNum() == 4)
         {   
-            // 게임 오버로 하자
+            // 게임 오버
             game_over = true;
         }
         // next는 snake가 다음 어디로 가야할지 그 위치의 값을 가진 SnakePiece이다
@@ -172,7 +172,7 @@ namespace snake{
         if((tmp_next!=NULL)&&(board.getCharAt(tmp_next->getY(), tmp_next->getX()) !='#')&& (board.getCharAt(tmp_next->getY(), tmp_next->getX()) !='%'))
             endWarp();
 
-        // 만약 사과나 폭탄이 NULL 상태라면 생성해야 한다
+        // 만약 사과나 폭탄이 NULL 상태라면 생성
         if (apple == NULL)
         {
             createApple();
@@ -201,7 +201,7 @@ namespace snake{
             // 현재 게임의 stage 번호를 num에 저장
             int num = getStageNum();
 
-            // 다음 스테이지로 넘어가야하므로 ++num 한 것
+            // 다음 스테이지로 넘어가야하므로 ++num
             initialize(++num);
             
         }
@@ -336,7 +336,7 @@ namespace snake{
         board.refresh();
     }
 
-    // ==혜인님 코드 (일정 시간 지나면 아이템 업데이트 기능)==
+    //일정 시간 지나면 아이템 업데이트 기능)
     // item update per 7seconds
     void SnakeGame::ItemUpdate()
     {
@@ -388,8 +388,8 @@ namespace snake{
         warp2=NULL;
 
         warpScore++;
-        delete tmp_next;
         tmp_next=NULL;
+        delete tmp_next;
     }
     
     void SnakeGame::checkWarp(SnakePiece& next, Warp *warp)

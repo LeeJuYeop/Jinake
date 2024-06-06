@@ -19,7 +19,6 @@ int main()
     // 게임 스타트
     SnakeGame game;
 
-    // ==혜인님 코드 (일정 시간 지나면 아이템 업데이트 기능)==
     // 시작 시간 구함
     auto start_time = std::chrono::steady_clock::now();
     // =============================================
