@@ -128,20 +128,8 @@ namespace snake{
             case 'a':
                 if (!snake.setDirection(left)) { game_over = true; }
                 break;
-
-            // p 누르면 pause
-            case 'p':
-                // 게임 창 속도를 음수로 함으로써 멈추게 한다
-                board.setTimeout(-1);
-                // p가 다시 입력될 때까지 while문 못 빠져 나감
-                while (board.getInput() != 'p')
-                    ;
-                // while문 빠져 나왔다는 것은 p를 다시 눌렀다는 것이니까
-                // 다시 게임 속도 원상태로 돌려놓기
-                board.setTimeout(300);
-                break;
             
-            // 임시로 만든 기능. n 누르면 다음 스테이지로 넘어감
+            // n 누르면 다음 스테이지로 넘어감(디버깅 용)
             case 'n':
                 // 현재 게임의 stage 번호를 num에 저장
                 int num = getStageNum();
@@ -369,7 +357,6 @@ namespace snake{
         board.refresh();
     }
 
-    // ==혜인님 코드 (일정 시간 지나면 아이템 업데이트 기능)==
     // item update per 7seconds
     void SnakeGame::ItemUpdate()
     {

@@ -35,7 +35,6 @@ int main()
         // 게임 새로고침(= 실제로 창에 표시하는 단계)
         game.redraw();
 
-        // ==혜인님 코드 (일정 시간 지나면 아이템 업데이트 기능)==
         //특정 시간 구함
         auto end_time = std::chrono::steady_clock::now();
 

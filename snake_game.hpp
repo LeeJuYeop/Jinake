@@ -61,7 +61,6 @@ public:
     // 게임 새로고침
     void redraw();
 
-    // ==혜인님 코드 (일정 시간 지나면 아이템 업데이트 기능)==
     //item update per 7seconds
     void ItemUpdate();
     // =============================================
