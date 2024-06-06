@@ -23,6 +23,9 @@ public:
     // 폭탄 만드는 함수
     void createBomb();
 
+    // 스피드 만드는 함수
+    void createSpeed();
+
     // 워프 만드는 함수
     void createWarp();
     void endWarp();
@@ -42,6 +45,9 @@ public:
 
     // 폭탄를 없애는(=먹는) 함수
     void eatBomb();
+
+    // 스피드를 없애는(=먹는) 함수
+    void eatSpeed();
 
     // stage 번호에 따라서 게임 창을 초기화하는 함수
     void setStage(int stageNum);
@@ -68,6 +74,8 @@ public:
     int thisisxMax();
     int thisisyMax();
 
+    void deleteAll(Apple* a, Bomb* b, Warp* w1, Warp* w2);
+
 private:
     SnakePiece *tmp_next;
     Board board;
@@ -77,6 +85,7 @@ private:
 
     Apple *apple;
     Bomb *bomb;
+    Speed *speed;
     Warp *warp1;
     Warp *warp2;
 
@@ -90,5 +99,5 @@ private:
     bool bombClear;
     bool warpClear;
 
-};
+    };
 }
