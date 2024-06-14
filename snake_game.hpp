@@ -29,17 +29,17 @@ public:
     // 워프 컴포넌트를 생성하는 함수
     void createWarp();
     void endWarp();
-    void checkWarp(SnakePiece& next, Warp *warp);
+    void checkWarp(SnakeSegment& next, Warp *warp);
 
     // 게임을 플레이하는 동안 사용자로부터 입력을 받는 함수
-    void getInputState();
+    void fetchUserInput();
 
     // 게임을 플레이하는 동안 진행하는 함수
-    void playingState();
+    void runGame();
 
     // 뱀이 다음 위치로 어떻게 나아가야하는지 조종하는 함수
 
-    void handleNext(SnakePiece next);
+    void controlNext(SnakeSegment next);
 
     // 사과 아이템을 먹을시 화면에서 없애주는 함수
     void eatApple();
@@ -63,7 +63,7 @@ public:
     void redraw();
 
     //아이템 위치를 화면에서 바꿔주는 함수 main에서 생성주기 결정
-    void ItemUpdate();
+    void updateItem();
 
     // 사과 먹은 갯수, 폭탄 먹은 갯수 리턴
     int getAppleScore();
@@ -76,7 +76,7 @@ public:
     void deleteAll(Apple* a, Bomb* b, Warp* w1, Warp* w2);
 
 private:
-    SnakePiece *tmp_next;
+    SnakeSegment *nextPosition;
     Board board;
     Snake snake;
 

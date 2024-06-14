@@ -22,11 +22,11 @@ int main()
     // 게임 오버가 될 때까지
     while (!game.checkOver())
     {   
-        // getInputState :: 입력 값으로 상태를 조정할 수 있음.
-        game.getInputState();
+        // fetchUserInput :: 입력 값으로 상태를 조정할 수 있음.
+        game.fetchUserInput();
 
-        // playingState :: 게임 중에 실행되야할 코드들 집합.
-        game.playingState();
+        // runGame :: 게임 중에 실행되야할 코드들 집합.
+        game.runGame();
 
         // 새로고침(창에 표시)
         game.redraw();
@@ -39,7 +39,7 @@ int main()
         
         // 7초마다 아이템 업데이트.
         if(mytime >= 7){
-            game.ItemUpdate();
+            game.updateItem();
             start_time=now;
         }
     }

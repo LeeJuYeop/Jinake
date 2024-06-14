@@ -14,11 +14,11 @@ namespace snake{
     };
 
     // snake의 몸통을 나타내는 클래스/ 각 몸통은 y x icon을 가지고 있음
-    class SnakePiece
+    class SnakeSegment
     {
     public:
         // 생성자 y x icon을 받아서 초기화
-        SnakePiece(int y = 0, int x = 0, char ch = '#');
+        SnakeSegment(int y = 0, int x = 0, char ch = '#');
 
         int getX();
 
@@ -34,7 +34,7 @@ namespace snake{
     class Snake
     {   
         // snake의 몸통을 저장하는 queue 생성
-        std::queue<SnakePiece> snake;
+        std::queue<SnakeSegment> snake;
         // 방향을 저장하는 변수
         Direction cur_direction;
 
@@ -45,13 +45,13 @@ namespace snake{
         // 초기화 함수/ snake의 몸통을 초기화
         void initialize();
 
-        void addBody(SnakePiece piece);
+        void addBody(SnakeSegment piece);
 
         void removeBody();
 
-        SnakePiece tail();
+        SnakeSegment tail();
 
-        SnakePiece head();
+        SnakeSegment head();
         // 방향을 설정하는 함수
         bool setDirection(Direction direct);
         bool setD_warp(Direction d);
@@ -60,8 +60,8 @@ namespace snake{
 
         Direction getDirection();
 
-        // 다음으로 이동할 위치 값을 가진 SnakePiece를 반환하는 함수
-        SnakePiece nexthead();
+        // 다음으로 이동할 위치 값을 가진 SnakeSegment를 반환하는 함수
+        SnakeSegment nexthead();
 
     };
 }

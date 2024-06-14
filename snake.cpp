@@ -1,19 +1,19 @@
 #include "snake.hpp"
 
 namespace snake{
-    SnakePiece::SnakePiece(int y, int x, char ch) : row(y), col(x), icon(ch) {}
+    SnakeSegment::SnakeSegment(int y, int x, char ch) : row(y), col(x), icon(ch) {}
 
-    int SnakePiece::getX()
+    int SnakeSegment::getX()
     {
         return col;
     }
 
-    int SnakePiece::getY()
+    int SnakeSegment::getY()
     {
         return row;
     }
 
-    void SnakePiece::setIcon(char ch)
+    void SnakeSegment::setIcon(char ch)
     {
         icon = ch;
     }
@@ -33,15 +33,15 @@ namespace snake{
             snake.pop();
         }
 
-        snake.push(SnakePiece(1, 1, '#'));
-        snake.push(SnakePiece(1, 2, '#'));
-        snake.push(SnakePiece(1, 3, '#'));
-        snake.push(SnakePiece(1, 4, '%'));
+        snake.push(SnakeSegment(1, 1, '#'));
+        snake.push(SnakeSegment(1, 2, '#'));
+        snake.push(SnakeSegment(1, 3, '#'));
+        snake.push(SnakeSegment(1, 4, '%'));
 
         cur_direction = right;
     }
 
-    void Snake::addBody(SnakePiece piece)
+    void Snake::addBody(SnakeSegment piece)
     {
         snake.push(piece);
     }
@@ -51,12 +51,12 @@ namespace snake{
         snake.pop();
     }
 
-    SnakePiece Snake::tail()
+    SnakeSegment Snake::tail()
     {
         return snake.front();
     }
 
-    SnakePiece Snake::head()
+    SnakeSegment Snake::head()
     {
         return snake.back();
     }
@@ -86,8 +86,8 @@ namespace snake{
         return cur_direction;
     }
 
-    // 다음으로 이동할 위치 값을 가진 SnakePiece를 반환하
-    SnakePiece Snake::nexthead()
+    // 다음으로 이동할 위치 값을 가진 SnakeSegment를 반환하
+    SnakeSegment Snake::nexthead()
     {
         int row = head().getY();
         int col = head().getX();
@@ -108,6 +108,6 @@ namespace snake{
                 break;
         }
 
-        return SnakePiece(row, col);
+        return SnakeSegment(row, col);
     }
 }

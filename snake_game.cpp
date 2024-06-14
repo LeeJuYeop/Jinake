@@ -15,7 +15,7 @@ namespace snake{
     // 소멸자가 호출될 시 진행하는 로직
     SnakeGame::~SnakeGame()
     {
-        delete tmp_next;
+        delete nextPosition;
         delete apple;
         delete bomb;
         delete speed;
@@ -49,7 +49,7 @@ namespace snake{
         board.addChar(1, 1, '#');
 
         // 사과랑 폭탄 아이템을 생성.
-        tmp_next = nullptr;
+        nextPosition = nullptr;
         createApple();
         createBomb();
         createSpeed();
@@ -105,7 +105,7 @@ namespace snake{
     }
 
     // 입력 받은 값에 따라 방향을 설정하는 함수
-    void SnakeGame::getInputState()
+    void SnakeGame::fetchUserInput()
     {
         char input = board.getInput();
 
@@ -129,7 +129,7 @@ namespace snake{
     }
 
     // 게임을 플레이하는 동안 진행하는 로직
-    void SnakeGame::playingState()
+    void SnakeGame::runGame()
     {
         // 마지막 스테이지(=4단계)라면 게임 오버로 간주
         if (getStage() == 4)
@@ -149,13 +149,13 @@ namespace snake{
             {
                 checkWarp(next, warp1);
             }
-            handleNext(next);
+            controlNext(next);
         }
         else
             // next 라는 SnakePiece를 가지고 뱀을 조종
-            handleNext(next);
+            controlNext(next);
         
-        if((tmp_next!=nullptr)&&(board.getChar(tmp_next->getY(), tmp_next->getX()) !='#')&& (board.getChar(tmp_next->getY(), tmp_next->getX()) !='%'))
+        if((nextPosition!=nullptr)&&(board.getChar(nextPosition->getY(), nextPosition->getX()) !='#')&& (board.getChar(nextPosition->getY(), nextPosition->getX()) !='%'))
             endWarp();
 
         // 만약 사과나 폭탄 아이템이 nullptr 상태라면 화면에 다시 생성
@@ -205,7 +205,7 @@ namespace snake{
     }
 
     // 다음으로 나아갈 위치에 대한 로직
-    void SnakeGame::handleNext(SnakePiece next)
+    void SnakeGame::controlNext(SnakePiece next)
     {   
         int nextRow = next.getY();
         int nextCol = next.getX();
@@ -342,7 +342,7 @@ namespace snake{
     }
 
     //아이템 위치를 화면에서 바꿔주는 함수 main에서 생성주기 결정
-    void SnakeGame::ItemUpdate()
+    void SnakeGame::updateItem()
     {
         // 사과 아이템이 nullptr 상태라면 화면에 다시 생성
         if (apple != nullptr) {
@@ -382,8 +382,8 @@ namespace snake{
         warp2=nullptr;
 
         warpScore++;
-        delete tmp_next;
-        tmp_next=nullptr;
+        delete nextPosition;
+        nextPosition=nullptr;
     }
     
     void SnakeGame::checkWarp(SnakePiece& next, Warp *warp)
@@ -413,7 +413,7 @@ namespace snake{
 
             snake.setD_warp(dirArr[idx]);
             next = SnakePiece(tmpY, tmpX);
-            tmp_next= new SnakePiece(next);
+            nextPosition= new SnakePiece(next);
             break;
         }
     }
