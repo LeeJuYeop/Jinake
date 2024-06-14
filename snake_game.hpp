@@ -38,6 +38,7 @@ public:
     void playingState();
 
     // 뱀이 다음 위치로 어떻게 나아가야하는지 조종하는 함수
+
     void handleNext(SnakePiece next);
 
     // 사과 아이템을 먹을시 화면에서 없애주는 함수
@@ -53,10 +54,10 @@ public:
     void setStage(int stageNum);
 
     // 현재 게임이 스테이지 번호를 리턴하는 함수
-    int getStageNum();
+    int getStage();
 
     // 게임 오버 여부를 리턴하는 함수
-    bool isOver();
+    bool checkOver();
 
     // 게임 새로고침
     void redraw();
