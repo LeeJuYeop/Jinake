@@ -20,7 +20,7 @@ public:
     // 사과 아이템을 생성하는 함수
     void createApple();
 
-    // 폭탄 아이템을 생성하는 함수
+    // trap 아이템을 생성하는 함수
     void createTrap();
 
     // 스피드 아이템을 생성하는 함수
@@ -44,7 +44,7 @@ public:
     // 사과 아이템을 먹을시 화면에서 없애주는 함수
     void eatApple();
 
-    // 폭탄 아이템을 먹을시 화면에서 없애주는 함수
+    // trap 아이템을 먹을시 화면에서 없애주는 함수
     void eatTrap();
 
     // 스피드 아이템을 먹을시 화면에서 없애주는 함수
@@ -65,7 +65,7 @@ public:
     //아이템 위치를 화면에서 바꿔주는 함수 main에서 생성주기 결정
     void updateItem();
 
-    // 사과 먹은 갯수, 폭탄 먹은 갯수 리턴
+    // 사과 먹은 갯수, trap 먹은 갯수 리턴
     int getAppleScore();
     int getTrapScore();
 

@@ -48,7 +48,7 @@ namespace snake{
         board.addChar(1, 2, '#');
         board.addChar(1, 1, '#');
 
-        // 사과랑 폭탄 아이템을 생성.
+        // 사과랑 trap 아이템을 생성.
         nextPosition = nullptr;
         createApple();
         createTrap();
@@ -69,7 +69,7 @@ namespace snake{
         board.addChar(y, x, 'A');
     }
 
-    // 폭탄 아이템을 만드는 함수
+    // trap 아이템을 만드는 함수
     void SnakeGame::createTrap()
     {
         int y, x;
@@ -78,8 +78,8 @@ namespace snake{
         board.searchItemPos(y, x);
 
         trap = new Trap(y, x);
-        // 폭탄 아이템이 생성될 위치에다가 'B' addChar
-        board.addChar(y, x, 'B');
+        // trap 아이템이 생성될 위치에다가 'B' addChar
+        board.addChar(y, x, 'T');
     }
 
     // 스핏드 아이템을 만드는 함수
@@ -158,7 +158,7 @@ namespace snake{
         if((nextPosition!=nullptr)&&(board.getChar(nextPosition->getY(), nextPosition->getX()) !='#')&& (board.getChar(nextPosition->getY(), nextPosition->getX()) !='%'))
             endWarp();
 
-        // 만약 사과나 폭탄 아이템이 nullptr 상태라면 화면에 다시 생성
+        // 만약 사과나 trap 아이템이 nullptr 상태라면 화면에 다시 생성
         if (apple == nullptr)
         {
             createApple();
@@ -247,10 +247,10 @@ namespace snake{
             board.addChar(snake.head().getY(), snake.head().getX(), '%');
         }
 
-        // 폭탄아이템을 먹는다면
+        // trap아이템을 먹는다면
         else if (board.getChar(nextRow, nextCol) == 'B')
         {  
-            // 폭탄 아이템을 먹는 함수 실행
+            // trap 아이템을 먹는 함수 실행
             eatTrap();
             trapScore++;
 
@@ -298,10 +298,10 @@ namespace snake{
 
     }
 
-    // 폭탄 아이템을 없애는(=먹는) 함수
+    // trap 아이템을 없애는(=먹는) 함수
     void SnakeGame::eatTrap()
     {   
-        // 게임 화면에 기존의 폭탄 위치에다가 빈칸 addChar
+        // 게임 화면에 기존의 trap 위치에다가 빈칸 addChar
         board.addChar(trap->getY(), trap->getX(), ' ');
 
         // 동적할당 했었던 trap 객체를 없애고 trap을 nullptr로 하자
@@ -349,7 +349,7 @@ namespace snake{
             eatApple();
             createApple();
         }
-        // 폭탄 아이템이 nullptr 상태라면 화면에 다시 생성
+        // trap 아이템이 nullptr 상태라면 화면에 다시 생성
         if (trap != nullptr) {
             eatTrap();
             createTrap();
