@@ -136,8 +136,8 @@ namespace snake{
         {   
             game_over = true;
         }
-        // next는 snake가 다음 어디로 가야할지 그 위치의 값을 가진 SnakePiece이다
-        SnakePiece next = snake.nexthead();
+        // next는 snake가 다음 어디로 가야할지 그 위치의 값을 가진 SnakeSegment이다
+        SnakeSegment next = snake.nexthead();
 
         if (board.getChar(next.getY(), next.getX()) == 'W')
         {
@@ -152,7 +152,7 @@ namespace snake{
             controlNext(next);
         }
         else
-            // next 라는 SnakePiece를 가지고 뱀을 조종
+            // next 라는 SnakeSegment를 가지고 뱀을 조종
             controlNext(next);
         
         if((nextPosition!=nullptr)&&(board.getChar(nextPosition->getY(), nextPosition->getX()) !='#')&& (board.getChar(nextPosition->getY(), nextPosition->getX()) !='%'))
@@ -205,7 +205,7 @@ namespace snake{
     }
 
     // 다음으로 나아갈 위치에 대한 로직
-    void SnakeGame::controlNext(SnakePiece next)
+    void SnakeGame::controlNext(SnakeSegment next)
     {   
         int nextRow = next.getY();
         int nextCol = next.getX();
@@ -386,7 +386,7 @@ namespace snake{
         nextPosition=nullptr;
     }
     
-    void SnakeGame::checkWarp(SnakePiece& next, Warp *warp)
+    void SnakeGame::checkWarp(SnakeSegment& next, Warp *warp)
     {
         int dDir[4][2] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
         Direction dirArr[4] = {up, right, down, left};
@@ -412,8 +412,8 @@ namespace snake{
                 continue;
 
             snake.setD_warp(dirArr[idx]);
-            next = SnakePiece(tmpY, tmpX);
-            nextPosition= new SnakePiece(next);
+            next = SnakeSegment(tmpY, tmpX);
+            nextPosition= new SnakeSegment(next);
             break;
         }
     }
