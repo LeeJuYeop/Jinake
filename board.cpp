@@ -124,7 +124,7 @@ namespace snake{
         wtimeout(gameBoard, gameSpeed);
     }
 
-    // 초기화 함수
+    // 화면을 초기화하는 함수
     void Board::initialize(int num) {
         wclear(gameBoard);
         wclear(scoreBoard);

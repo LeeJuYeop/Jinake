@@ -19,13 +19,13 @@ namespace snake{
     }
     
 
-    // 기본은 right 방향으로 설정
+    // 기본적으로 뱀은 오른쪽으로 이동하며, 몸통의 길이는 4로 시작
     Snake::Snake()
     {
         cur_direction = right;
     }
 
-    // 초기화 진행 / snake 큐 다 없애고 ###@ 형태로 추가, 방향은 오른쪽
+    // 뱀 초기화 머리부분은 % 몸통은 #으로 표시
     void Snake::initialize()
     {
         while (!snake.empty())
@@ -86,7 +86,7 @@ namespace snake{
         return cur_direction;
     }
 
-    // 다음으로 나아가야하는 위치 값을 가진 SnakePiece 반환
+    // 다음으로 이동할 위치 값을 가진 SnakePiece를 반환하
     SnakePiece Snake::nexthead()
     {
         int row = head().getY();

@@ -2,8 +2,8 @@
 #include <chrono>
 
 namespace snake{
-    // 생성자 호출 시 게임 창을 stage 0번으로 초기화
-    // appleScore와 bombScore 0으로 초기화.
+    // 생성자가 호출될 시 초기화하는 로직, 기본적으로 stage 번호는 0(1단계)로 시작
+    // appleScore와 bombScore는 0으로 초기화
     SnakeGame::SnakeGame()
     {
         initialize(0);
@@ -12,7 +12,7 @@ namespace snake{
         warpScore = 0;
     }
 
-    // 소멸자 호출 시 동적으로 할당했던 변수 delete
+    // 소멸자가 호출될 시 진행하는 로직
     SnakeGame::~SnakeGame()
     {
         delete tmp_next;
@@ -36,19 +36,19 @@ namespace snake{
         appleClear = false;
         bombClear = false;
         warpClear = false;
-        // 게임 창을 stageNum 번째 stage로 초기화
+        // 게임 창을 stageNum에 따라 초기화
         board.initialize(stageNum);
 
-        // snake queue를 게임 창 좌측 상단에 ###@ 형태로 초기화
+        //게임을 시작하면 snake의 몸통 위치를 좌측상단에 놓는다
         snake.initialize();
 
-        // 게임 창에 메모리 상으로 초기화 된 snake 위치 표시한다
+        // 게임 창에 초기화 된 snake 위치 표시한다
         board.add(1, 4, '%');
         board.add(1, 3, '#');
         board.add(1, 2, '#');
         board.add(1, 1, '#');
 
-        // 사과랑 폭탄 만든다
+        // 사과랑 폭탄 아이템을 생성.
         tmp_next = nullptr;
         createApple();
         createBomb();
@@ -56,21 +56,20 @@ namespace snake{
         createWarp();
     }
 
-    // 사과 만드는 함수
+    // 사과 아이템을 생성하는 함수
     void SnakeGame::createApple()
     {
         int y, x;
 
-        // 아이템이 생성될 수 있는 위치 get하기
+        // 아이템이 생성될 수 있는 위치 가져오기
         board.getItemPos(y, x);
 
         apple = new Apple(y, x);
-
-        // 게임 창의 메모리 상으로 사과 A 추가
+        // 사과 아이템이 생성될 위치에다가 'A' add
         board.add(y, x, 'A');
     }
 
-    // 폭탄 만드는 함수
+    // 폭탄 아이템을 만드는 함수
     void SnakeGame::createBomb()
     {
         int y, x;
@@ -79,12 +78,11 @@ namespace snake{
         board.getItemPos(y, x);
 
         bomb = new Bomb(y, x);
-
-        // 게임 창의 메모리 상으로 사과 B 추가
+        // 폭탄 아이템이 생성될 위치에다가 'B' add
         board.add(y, x, 'B');
     }
 
-    // 스피드 만드는 함수
+    // 스핏드 아이템을 만드는 함수
     void SnakeGame::createSpeed() {
         int y, x;
         board.getItemPos(y, x);
@@ -92,7 +90,7 @@ namespace snake{
         board.add(y, x, 'S');
     }
 
-    // 워프 만드는 함수
+    // 워프 컴포넌트를 만드는 함수
     void SnakeGame::createWarp()
     {
         int y, x;
@@ -106,16 +104,15 @@ namespace snake{
         board.add(y, x, 'W');
     }
 
-    // 입력 받은 값에 따라 작동을 달리하는 로직
+    // 입력 받은 값에 따라 방향을 설정하는 함수
     void SnakeGame::getInputState()
     {
         char input = board.getInput();
 
         switch (input)
         {
-            // w a s d로 뱀 움직이기
-            // setDirection(direction)은 현재 방향과 반대 방향 키를 누르면 false 반환, 아니면 true 반환한다
-            // 반대 방향 키를 누르면 게임 오버가 되도록 설정
+            // w a s d 키로 뱀 움직이기
+            // setDirection함수는 은 현재 진행 방향과 반대 방향 키를 누르면 false 반환하고 그 외에는 true 반환한다
             case 'w':
                 if (!snake.setDirection(up)) { game_over = true; }
                 break;
@@ -128,26 +125,15 @@ namespace snake{
             case 'a':
                 if (!snake.setDirection(left)) { game_over = true; }
                 break;
-            
-            // n 누르면 다음 스테이지로 넘어감(디버깅 용)
-            case 'n':
-                // 현재 게임의 stage 번호를 num에 저장
-                int num = getStageNum();
-
-                // 다음 스테이지로 넘어가야하므로 ++num 한 것
-                initialize(++num);
-                
-                break;
         }
     }
 
     // 게임을 플레이하는 동안 진행하는 로직
     void SnakeGame::playingState()
     {
-        // 스테이지가 4라는 것은 스테이지 끝이라는 뜻
+        // 마지막 스테이지(=4단계)라면 게임 오버로 간주
         if (getStageNum() == 4)
         {   
-            // 게임 오버로 하자
             game_over = true;
         }
         // next는 snake가 다음 어디로 가야할지 그 위치의 값을 가진 SnakePiece이다
@@ -172,7 +158,7 @@ namespace snake{
         if((tmp_next!=nullptr)&&(board.getCharAt(tmp_next->getY(), tmp_next->getX()) !='#')&& (board.getCharAt(tmp_next->getY(), tmp_next->getX()) !='%'))
             endWarp();
 
-        // 만약 사과나 폭탄이 nullptr 상태라면 생성해야 한다
+        // 만약 사과나 폭탄 아이템이 nullptr 상태라면 화면에 다시 생성
         if (apple == nullptr)
         {
             createApple();
@@ -218,43 +204,41 @@ namespace snake{
         }
     }
 
-    // 뱀이 다음 위치로 어떻게 나아가야하는지 icon에 따라 조종하는 함수
+    // 다음으로 나아갈 위치에 대한 로직
     void SnakeGame::handleNext(SnakePiece next)
     {   
         int nextRow = next.getY();
         int nextCol = next.getX();
 
         // 만약 다음으로 나아갈 위치가 ' '이라면
-        // 이하 "뱀이 앞으로 나아가는 로직" 이라고 칭함
         if (board.getCharAt(nextRow, nextCol) == ' ')
         {   
-            // snake의 꼬리 위치에다가 ' ' add 한다
+            // snake의 꼬리 위치에 있는 icon을 ' '로 설정
             board.add(snake.tail().getY(), snake.tail().getX(), ' ');
-            // snake의 꼬리를 없앤다
+            // snake의 꼬리 부분을 없앤다
             snake.removeBody();
 
-            // 현 상태의 snake의 머리 부분의 icon을 '#'으로 설정
+            // snake의 머리 부분의 icon을 '#'로 설정
             snake.head().setIcon('#');
-            // 게임 창에도 똑같이 snake의 머리 부분 위치를 '#'으로 바꿈(=add)
+            // 게임 창에도 똑같이 반영
             board.add(snake.head().getY(), snake.head().getX(), '#');
-
-            // snake에다가 next 추가
+            // snake의 머리 부분을 next로 설정
             snake.addBody(next);
-            // next를 추가한 최종 snake의 머리 부분의 icon을 '@'로 설정
+            // snake의 머리 부분의 icon을 '%'로 설정
             snake.head().setIcon('%');
             // 게임 창에도 똑같이 반영
             board.add(snake.head().getY(), snake.head().getX(), '%');
         }
 
-        // 사과를 먹는다면
+        // 만약 다음으로 나아갈 위치가 사과 아이템('A')라면
         else if (board.getCharAt(nextRow, nextCol) == 'A')
         {
-            // 사과 먹는 함수 실행
+            // 사과 아이템을 먹는 함수 실행
             eatApple();
             appleScore++;
 
 
-            // 뱀이 앞으로 나아가는 로직에서 꼬리 부분을 없애는 과정을 건너뛰면 된다
+            // 꼬리를 없애는 로직을 생략하고 앞으로 나아가는 로직을 진행
             snake.head().setIcon('#');
             board.add(snake.head().getY(), snake.head().getX(), '#');
 
@@ -263,14 +247,14 @@ namespace snake{
             board.add(snake.head().getY(), snake.head().getX(), '%');
         }
 
-        // 폭탄을 먹는다면
+        // 폭탄아이템을 먹는다면
         else if (board.getCharAt(nextRow, nextCol) == 'B')
         {  
-            // 폭탄을 먹는 함수 실행
+            // 폭탄 아이템을 먹는 함수 실행
             eatBomb();
             bombScore++;
 
-            // 꼬리를 한번 더 삭제하고 앞으로 나아가는 로직 진행
+            // 꼬리를 한번 더 없애는 로직을 진행한 후 앞으로 나아가는 로직을 진행
             board.add(snake.tail().getY(), snake.tail().getX(), ' ');
             snake.removeBody();
 
@@ -295,32 +279,32 @@ namespace snake{
             board.setSpeed(newSpeed);
         }
 
-        // Wall(= '1')을 만났을 때, 뱀 몸통(=자기 자신)을 만났을 때
+        // 만약 다음으로 나아갈 위치가 벽이라면 게임 오버로 간주, 자신의 몸통을 만나도 게임 오버
         else
         {
             game_over = true;
         }
     }
 
-    // 사과를 없애는(=먹는) 함수
+    // 사과아이템을 없애는(=먹는) 함수
     void SnakeGame::eatApple()
     {   
-        // 우선 보드에 기존의 사과 위치에다가 ' ' add한다
+        //게임 화면에 기존의 사과 아이템 위치에 빈칸 add
         board.add(apple->getY(), apple->getX(), ' ');
 
-        // 동적할당 했었던 apple 없애고 apple을 nullptr로 하자
+        // 동적할당 했었던 apple 객체를 없애고 apple을 nullptr로 설정
         delete apple;
         apple = nullptr;
 
     }
 
-    // 폭탄를 없애는(=먹는) 함수
+    // 폭탄 아이템을 없애는(=먹는) 함수
     void SnakeGame::eatBomb()
     {   
-        // 우선 보드에 기존의 폭탄 위치에다가 ' ' add한다
+        // 게임 화면에 기존의 폭탄 위치에다가 빈칸 add
         board.add(bomb->getY(), bomb->getX(), ' ');
 
-        // 동적할당 했었던 bomb 없애고 bomb을 nullptr로 하자
+        // 동적할당 했었던 bomb 객체를 없애고 bomb을 nullptr로 하자
         delete bomb;
         bomb = nullptr;
     }
@@ -343,7 +327,7 @@ namespace snake{
         return board.getStageNum();
     }
 
-    // 게임 오버 됐는지 확인하는 함수
+    // 게임 오버 여부 확인
     bool SnakeGame::isOver()
     {
         return game_over;
@@ -357,31 +341,22 @@ namespace snake{
         board.refresh();
     }
 
-    // item update per 7seconds
+    //아이템 위치를 화면에서 바꿔주는 함수 main에서 생성주기 결정
     void SnakeGame::ItemUpdate()
     {
+        // 사과 아이템이 nullptr 상태라면 화면에 다시 생성
         if (apple != nullptr) {
-            // board.add(apple->getY(), apple->getX(), ' ');
-            // delete apple;
-            // apple = nullptr;
-
-            // 기존 코드가 eatApple()과 똑같아서 대체함
             eatApple();
             createApple();
         }
-
+        // 폭탄 아이템이 nullptr 상태라면 화면에 다시 생성
         if (bomb != nullptr) {
-            // board.add(bomb->getY(), bomb->getX(), ' ');
-            // delete bomb;
-            // bomb = nullptr;
-
-            // 기존 코드가 eatBomb()과 똑같아서 대체함
             eatBomb();
             createBomb();
         }
     }
 
-    // appleScore, bombScore 반환해주는 함수.
+    // appleScore, bombScore 반환
     int SnakeGame::getAppleScore(){
         return appleScore;
     }
@@ -396,7 +371,6 @@ namespace snake{
         return board.getyMax();
     }
 
-    // ==============================================
     void SnakeGame::endWarp()
     {
         board.add(warp1->getY(), warp1->getX(), warp1->getExitIcon());
@@ -430,14 +404,13 @@ namespace snake{
             int tmpY = warp->getY() + dDir[idx][0];
             int tmpX = warp->getX() + dDir[idx][1];
 
-            //out of map
+            // 멥을 벗어나면 continue
             if((tmpY<0)|| (tmpX<0)|| (tmpY>20) ||(tmpX>38))
                 continue;
-            //if(board.stage[board.stageNum][tmp_y][tmp_x]=='$')
+            // 만약 벽이거나 뱀의 몸통이 있다면 continue
             if(board.getCharAt(tmpY, tmpX)=='+' || board.getCharAt(tmpY, tmpX)=='#')
                 continue;
 
-            //if find empty
             snake.setD_warp(dirArr[idx]);
             next = SnakePiece(tmpY, tmpX);
             tmp_next= new SnakePiece(next);
