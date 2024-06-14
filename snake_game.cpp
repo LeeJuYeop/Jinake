@@ -3,12 +3,12 @@
 
 namespace snake{
     // 생성자가 호출될 시 초기화하는 로직, 기본적으로 stage 번호는 0(1단계)로 시작
-    // appleScore와 bombScore는 0으로 초기화
+    // appleScore와 trapScore는 0으로 초기화
     SnakeGame::SnakeGame()
     {
         initialize(0);
         appleScore = 0;
-        bombScore = 0;
+        trapScore = 0;
         warpScore = 0;
     }
 
@@ -17,7 +17,7 @@ namespace snake{
     {
         delete nextPosition;
         delete apple;
-        delete bomb;
+        delete trap;
         delete speed;
         delete warp1;
         delete warp2;
@@ -29,12 +29,12 @@ namespace snake{
         srand(time(nullptr));
 
         appleScore = 0;
-        bombScore = 0;
+        trapScore = 0;
         warpScore = 0;
         missionClear = false;
         sizeClear = false;
         appleClear = false;
-        bombClear = false;
+        trapClear = false;
         warpClear = false;
         // 게임 창을 stageNum에 따라 초기화
         board.initializeBoard(stageNum);
@@ -51,7 +51,7 @@ namespace snake{
         // 사과랑 폭탄 아이템을 생성.
         nextPosition = nullptr;
         createApple();
-        createBomb();
+        createTrap();
         createSpeed();
         createWarp();
     }
@@ -70,14 +70,14 @@ namespace snake{
     }
 
     // 폭탄 아이템을 만드는 함수
-    void SnakeGame::createBomb()
+    void SnakeGame::createTrap()
     {
         int y, x;
 
         // 아이템이 생성될 수 있는 위치 get하기
         board.searchItemPos(y, x);
 
-        bomb = new Bomb(y, x);
+        trap = new Trap(y, x);
         // 폭탄 아이템이 생성될 위치에다가 'B' addChar
         board.addChar(y, x, 'B');
     }
@@ -164,9 +164,9 @@ namespace snake{
             createApple();
         }
 
-        if (bomb == nullptr)
+        if (trap == nullptr)
         {
-            createBomb();
+            createTrap();
         }
 
         if (speed == nullptr)
@@ -182,10 +182,10 @@ namespace snake{
         // 미션들 조건 맞으면 클리어로 바꾸기
         if (snake.getSize()>=10){sizeClear = true;}
         if (appleScore>=7){appleClear = true;}
-        if (bombScore>=5){bombClear = true;}
+        if (trapScore>=5){trapClear = true;}
         if (warpScore>=3){warpClear = true;}
 
-        if (sizeClear&&appleClear&&bombClear&&warpClear){missionClear = true;}
+        if (sizeClear&&appleClear&&trapClear&&warpClear){missionClear = true;}
 
         // 모든 미션 클리어 시 다음 스테이지로 넘어가기.
         if (missionClear){
@@ -251,8 +251,8 @@ namespace snake{
         else if (board.getChar(nextRow, nextCol) == 'B')
         {  
             // 폭탄 아이템을 먹는 함수 실행
-            eatBomb();
-            bombScore++;
+            eatTrap();
+            trapScore++;
 
             // 꼬리를 한번 더 없애는 로직을 진행한 후 앞으로 나아가는 로직을 진행
             board.addChar(snake.tail().getY(), snake.tail().getX(), ' ');
@@ -299,14 +299,14 @@ namespace snake{
     }
 
     // 폭탄 아이템을 없애는(=먹는) 함수
-    void SnakeGame::eatBomb()
+    void SnakeGame::eatTrap()
     {   
         // 게임 화면에 기존의 폭탄 위치에다가 빈칸 addChar
-        board.addChar(bomb->getY(), bomb->getX(), ' ');
+        board.addChar(trap->getY(), trap->getX(), ' ');
 
-        // 동적할당 했었던 bomb 객체를 없애고 bomb을 nullptr로 하자
-        delete bomb;
-        bomb = nullptr;
+        // 동적할당 했었던 trap 객체를 없애고 trap을 nullptr로 하자
+        delete trap;
+        trap = nullptr;
     }
 
     void SnakeGame::eatSpeed() {
@@ -336,8 +336,8 @@ namespace snake{
     // 게임 새로고침
     void SnakeGame::redraw()
     {   
-        board.recording(snake.getSize(), getAppleScore(), getBombScore(), warpScore,
-        sizeClear, appleClear, bombClear, warpClear);
+        board.recording(snake.getSize(), getAppleScore(), getTrapScore(), warpScore,
+        sizeClear, appleClear, trapClear, warpClear);
         board.refreshBoard();
     }
 
@@ -350,18 +350,18 @@ namespace snake{
             createApple();
         }
         // 폭탄 아이템이 nullptr 상태라면 화면에 다시 생성
-        if (bomb != nullptr) {
-            eatBomb();
-            createBomb();
+        if (trap != nullptr) {
+            eatTrap();
+            createTrap();
         }
     }
 
-    // appleScore, bombScore 반환
+    // appleScore, trapScore 반환
     int SnakeGame::getAppleScore(){
         return appleScore;
     }
-    int SnakeGame::getBombScore(){
-        return bombScore;
+    int SnakeGame::getTrapScore(){
+        return trapScore;
     }
     // xMax, yMax board에서 가져오는 함수. snake_game에서 얘 호출함.
     int SnakeGame::thisisxMax(){
@@ -418,7 +418,7 @@ namespace snake{
         }
     }
 
-    void deleteAll(Apple* a, Bomb*b, Warp* w1, Warp* w2) {
+    void deleteAll(Apple* a, Trap*b, Warp* w1, Warp* w2) {
         delete a;
         delete b;
         delete w1;

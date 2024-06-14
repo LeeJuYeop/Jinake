@@ -179,11 +179,11 @@ namespace snake{
     }
 
     // 스코어 보드와 미션 보드에 점수 기록하기
-    void Board::recording(int size, int appleS, int bombS, int warpS, bool sizeC, bool appleC, bool bombC, bool warpC) {
+    void Board::recording(int size, int appleS, int trapS, int warpS, bool sizeC, bool appleC, bool trapC, bool warpC) {
         mvwprintw(scoreBoard, 1, 3, "~ Score board ~");
         mvwprintw(scoreBoard, 3, 3, "Size : %d ", size);
         mvwprintw(scoreBoard, 4, 3, "Apple : %d ", appleS);
-        mvwprintw(scoreBoard, 5, 3, "Bomb : %d ", bombS);
+        mvwprintw(scoreBoard, 5, 3, "Trap : %d ", trapS);
         mvwprintw(scoreBoard, 6, 3, "Warp : %d ", warpS);
 
         mvwprintw(scoreBoard, 8, 3, "Stage : %d", stageNum+1);
@@ -193,8 +193,8 @@ namespace snake{
         else{mvwprintw(missionBoard, 3, 3, "Size : %d/10 (  )", size);}
         if(appleC){mvwprintw(missionBoard, 4, 3, "Apple : 7/7 ( v )");}
         else{mvwprintw(missionBoard, 4, 3, "Apple : %d/7 (  )", appleS);}
-        if(bombC){mvwprintw(missionBoard, 5, 3, "Bomb : 5/5 ( v )");}
-        else{mvwprintw(missionBoard, 5, 3, "Bomb : %d/5 (  )", bombS);}
+        if(trapC){mvwprintw(missionBoard, 5, 3, "Trap : 5/5 ( v )");}
+        else{mvwprintw(missionBoard, 5, 3, "Trap : %d/5 (  )", trapS);}
         if(warpC){mvwprintw(missionBoard, 6, 3, "Warp : 3/3 ( v )");}
         else{mvwprintw(missionBoard, 6, 3, "Warp : %d/3 (  )", warpS);}
     }
