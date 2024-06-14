@@ -7,62 +7,56 @@ using namespace snake;
 
 int main()
 {   
-    // ncurses 시작
+    // ncurses init 및 초기화. 입력된 키 미표시. 커서 미표시.
     initscr();
-    // 일단 초기화 진행
     refresh();
-    // 입력된 키 표시 안함
     noecho();
-    // 커서 안보이게 설정
     curs_set(0);
 
-    // 게임 스타트
-    SnakeGame game;
+    SnakeGame game;     // SnakeGame 객체 생성. 게임 시작.
 
-    // 시작 시간 구함
+    // 시작 시간 구하기. (초마다 아이템 업데이트를 위해 필요.)
     auto start_time = std::chrono::steady_clock::now();
     // =============================================
 
     // 게임 오버가 될 때까지
-    while (!game.isOver())
+    while (!game.checkOver())
     {   
-        // 게임에서 입력 값에 따라 바뀌는 로직
+        // getInputState :: 입력 값으로 상태를 조정할 수 있음.
         game.getInputState();
 
-        // 게임하는 중 진행되는 로직
+        // playingState :: 게임 중에 실행되야할 코드들 집합.
         game.playingState();
 
-        // 게임 새로고침(= 실제로 창에 표시하는 단계)
+        // 새로고침(창에 표시)
         game.redraw();
 
-        //특정 시간 구함
-        auto end_time = std::chrono::steady_clock::now();
+        //현재 시간 구함 (초마다 아이템 업데이트를 위해 필요.)
+        auto now = std::chrono::steady_clock::now();
 
-        //시간 계산(특정 시간 - 시작 시간)
-        auto temp= std::chrono::duration_cast<std::chrono::seconds>(end_time-start_time).count();
+        // 시작 시간부터 얼마나 흘렀는지 저장 (초마다 아이템 업데이트를 위해 필요.)
+        auto mytime= std::chrono::duration_cast<std::chrono::seconds>(now-start_time).count();
         
-        //7초가 됐을 때
-        if(temp>=7){
+        // 7초마다 아이템 업데이트.
+        if(mytime >= 7){
             game.ItemUpdate();
-            start_time=end_time;
+            start_time=now;
         }
-        // ==============================================
     }
 
-    // 게임 오버 되어서 빠져 나왔을 때 스테이지 넘버가 4라는 것은 클리어 했다는 뜻
-    if (game.getStageNum() == 4)
+
+
+    // 게임 오버로 while문 빠져나왔을 때 스테이지가 4면 clear(game clear)이며 아니면 실패.(game over)
+    if (game.getStage() == 4)
     {
         printw("%d %d", game.thisisyMax()/2, (game.thisisxMax()/2)-5);
         mvprintw(game.thisisyMax()/2, (game.thisisxMax()/2)-5, "Game Clear!!!");
     }
-    // 그게 아니라면 진짜로 게임 오버라는 뜻
     else
     {
         mvprintw(game.thisisyMax()/2, (game.thisisxMax()/2)-5, "Game Over!!!");
     }
     
-    // 입력 값 받을 때 까지 대기
-    getch();
-    // ncurses 종료
-    endwin();
+    getch();        // 새로운 입력이 있을 떄까지 대기(게임이 다 끝나고 종료 메시지가 출력되고 대기중인 상태.)
+    endwin();       // 아무 키나 누르면 키를 누르면 게임 종료.
 }
