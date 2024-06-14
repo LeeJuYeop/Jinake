@@ -39,7 +39,7 @@ namespace snake{
         void searchWarpPos(int &y, int &x);
 
         // 스코어 보드와 미션 보드에 점수 기록하기
-        void recording(int size, int appleS, int TrapS, int warpS, bool sizeC, bool appleC, bool TrapC, bool warpC);
+        void recording(int size, int appleS, int bombS, int warpS, bool sizeC, bool appleC, bool bombC, bool warpC);
 
         // 내 화면 상의 창의 가로길이, 세로길이 받기.
         int getxMax();
