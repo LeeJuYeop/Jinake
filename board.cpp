@@ -113,7 +113,7 @@ namespace snake{
             {'#','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','+','#'}}
     };
 
-    // 생성자 호출하여 21 39 크기의 Board 만들기
+    // 보드 생성자 호출.
     Board::Board() {
         gameSpeed = 300;
 
@@ -124,37 +124,35 @@ namespace snake{
         wtimeout(gameBoard, gameSpeed);
     }
 
-    // 화면을 초기화하는 함수
-    void Board::initialize(int num) {
+    // 스테이지 넘버로 보드 초기화.
+    void Board::initializeBoard(int mystage) {
         wclear(gameBoard);
         wclear(scoreBoard);
         wclear(missionBoard);
 
-        stageNum = num;
+        stageNum = mystage;
 
-        for (int i = 0; i < 21; i++)
+        for (int row = 0; row < 21; row++)
         {
-            for (int j = 0; j < 39; j++) { mvwaddch(gameBoard, i, j, stage[stageNum][i][j]); }
+            for (int col = 0; col < 39; col++) { 
+                mvwaddch(gameBoard, row, col, stage[stageNum][row][col]);
+            }
         }
     }
 
-    // Board의 메모리상에서 (y, x) 위치에 ch 문자 추가하기
-    void Board::add(int y, int x, char ch) { mvwaddch(gameBoard, y, x, ch); }
-
-    // Board의 (y, x) 위치의 문자 값 가져오기
-    char Board::getCharAt(int y, int x) { return mvwinch(gameBoard, y, x); }
-
-    // 입력 값 가져오기
+    // Board 특정 위치에 문자 추가
+    void Board::addChar(int y, int x, char ch) { mvwaddch(gameBoard, y, x, ch); }
+    // Board의 특정 위치 문자 불러오기
+    char Board::getChar(int y, int x) { return mvwinch(gameBoard, y, x); }
+    // 입력 값 받기.
     char Board::getInput() { return wgetch(gameBoard); }
-
-    // 현재 게임의 단계 번호 가져오기
+    // 스테이지 번호 받기.
     int Board::getStageNum() { return stageNum; }
-
     // 게임 속도 조절하기
     void Board::setTimeout(int tick) { wtimeout(gameBoard, tick); }
 
-    // Board 새로고침 하기
-    void Board::refresh() {   
+    // Board 새로고침
+    void Board::refreshBoard() {   
         box(scoreBoard, 0, 0);
         box(missionBoard, 0, 0);
         wrefresh(gameBoard);
@@ -162,13 +160,12 @@ namespace snake{
         wrefresh(missionBoard);
     }
 
-    // 아이템(사과, 폭탄) 놓을 수 있는 위치 찾기
-    void Board::getItemPos(int &y, int &x) {   
+    // item 배치 가능한 좌표 찾기
+    void Board::searchItemPos(int &y, int &x) {   
         while ((mvwinch(gameBoard, y = rand() % 21, x = rand() % 39)) != ' ');
     }
-
-    // 워프 놓을 수 있는 위치 찾기
-    void Board::getWarpPos(int &y, int &x) {
+    // 워프 배치 가능한 좌표 찾기
+    void Board::searchWarpPos(int &y, int &x) {
         int tmp = rand() % 2;
 
         if (tmp == 0) { while ((mvwinch(gameBoard, y = rand() % 21, x = rand() % 39)) != ' '); }
@@ -202,7 +199,7 @@ namespace snake{
         else{mvwprintw(missionBoard, 6, 3, "Warp : %d/3 (  )", warpS);}
     }
 
-
+    // 내 화면 상의 창의 가로길이, 세로길이 받기.
     int Board::getxMax() { return xMax; }
     int Board::getyMax() { return yMax; }
 }
