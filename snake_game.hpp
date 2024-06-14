@@ -21,7 +21,7 @@ public:
     void createApple();
 
     // 폭탄 아이템을 생성하는 함수
-    void createBomb();
+    void createTrap();
 
     // 스피드 아이템을 생성하는 함수
     void createSpeed();
@@ -45,7 +45,7 @@ public:
     void eatApple();
 
     // 폭탄 아이템을 먹을시 화면에서 없애주는 함수
-    void eatBomb();
+    void eatTrap();
 
     // 스피드 아이템을 먹을시 화면에서 없애주는 함수
     void eatSpeed();
@@ -67,13 +67,13 @@ public:
 
     // 사과 먹은 갯수, 폭탄 먹은 갯수 리턴
     int getAppleScore();
-    int getBombScore();
+    int getTrapScore();
 
     //yMax, xMax main에 넘겨주기 위한 함수
     int thisisxMax();
     int thisisyMax();
 
-    void deleteAll(Apple* a, Bomb* b, Warp* w1, Warp* w2);
+    void deleteAll(Apple* a, Trap* b, Warp* w1, Warp* w2);
 
 private:
     SnakeSegment *nextPosition;
@@ -83,19 +83,19 @@ private:
     bool game_over = false;
 
     Apple *apple;
-    Bomb *bomb;
+    Trap *Trap;
     Speed *speed;
     Warp *warp1;
     Warp *warp2;
 
     int appleScore;
-    int bombScore;
+    int TrapScore;
     int warpScore;
 
     bool missionClear;
     bool sizeClear;
     bool appleClear;
-    bool bombClear;
+    bool TrapClear;
     bool warpClear;
 
     };

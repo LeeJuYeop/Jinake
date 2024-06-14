@@ -11,7 +11,7 @@ namespace snake {
 
     Apple::Apple(int y, int x) : Item(y, x) { icon = 'A'; }
     
-    Bomb::Bomb(int y, int x) : Item(y, x) { icon = 'B'; }
+    Trap::Trap(int y, int x) : Item(y, x) { icon = 'B'; }
 
     Speed::Speed(int y, int x) :Item(y, x) { icon = 'S'; }
     

@@ -25,9 +25,9 @@ namespace snake {
     };
 
     // Item 상속(몸길이 감소)
-    class Bomb : public Item {
+    class Trap : public Item {
     public:
-        Bomb(int y = 0, int x = 0);
+        Trap(int y = 0, int x = 0);
     };
 
     // Item 상속(속도 변화)
