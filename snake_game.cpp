@@ -78,7 +78,7 @@ namespace snake{
         board.searchItemPos(y, x);
 
         trap = new Trap(y, x);
-        // trap 아이템이 생성될 위치에다가 'B' addChar
+        // trap 아이템이 생성될 위치에다가 'T' addChar
         board.addChar(y, x, 'T');
     }
 
@@ -248,7 +248,7 @@ namespace snake{
         }
 
         // trap아이템을 먹는다면
-        else if (board.getChar(nextRow, nextCol) == 'B')
+        else if (board.getChar(nextRow, nextCol) == 'T')
         {  
             // trap 아이템을 먹는 함수 실행
             eatTrap();
